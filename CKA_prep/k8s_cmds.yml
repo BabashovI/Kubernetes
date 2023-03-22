@@ -1,0 +1,72 @@
+kubectl run nginx --image=nginx
+kubectl run nginx --image=nginx --dry-run=client -o yaml  --Generate POD Manifest YAML file (-o yaml). Don’t create it(–dry-run)
+kubectl create deployment --image=nginx nginx
+kubectl create deployment --image=nginx nginx --dry-run=client -o yaml
+kubectl create deployment --image=nginx nginx --replicas=4 --dry-run=client -o yaml > nginx-deployment.yaml       -- +ver1.9
+kubectl expose pod redis --port=6379 --name redis-service --dry-run=client -o yaml --Generate 
+Service Manifest YAML file (-o yaml). Don’t create it(–dry-run)
+kubectl expose deployment nginx-deployment --type=NodePort --name=nginx-service
+Create a Service named nginx of type NodePort to expose pod nginx’s port 80 on port 30080 on the nodes:
+  - kubectl expose pod nginx --type=NodePort --port=80 --name=nginx-service --dry-run=client -o yaml
+  - kubectl create service clusterip --tcp=6379:6379 redis-service
+kubectl get componentstatuses
+kubectl cluster-info
+kubectl get all
+kubectl get pod
+kubectl get deployment
+kubectl get services(svc)
+kubectl get rs         -- replica set
+kubectl get rc         -- replica controller
+kubectl port-forward hello 7080:80  --forward local port to pod port
+kubectl exec envars --
+kubectl scale --replicas=5 rs new-replica-set
+kubectl get all --selector=env=prod    --filter out by labels env
+kubectl logs -f pod-name    
+kubectl rollout status deployment.apps/qwe
+kubectl rollout history deployment.apps/qwe
+kubectl rollout undo deployment.apps/qwe
+kubectl describe replicaset new-replica-set
+kubectl delete pod new-replica-set-mp2qf
+kubectl create -f new-replica-set.yml
+kubectl delete replicaset new-replica-set
+kubectl edit replicaset new-replica-set
+kubectl scale replicaset new-replica-set --replicas=5
+
+kubectl drain nodename      --- moves nodes to another nodes and mark ist as unschedulable
+kubectl cordon nodename     --- makes node unschedulable
+kubectl uncordon nodename   --- makes node schedulable
+
+kubectl run envars --image=redis --env="NODE_NAME=spec.nodeName" --dry-run=client -o yaml  --command -- 'sh' 'c' 'while true; do echo -en '/n'; printenv NODE_NAME POD_NAME; printenv POD_IP POD_SERVICE_ACCOUNT; sleep 10; done;' 
+
+###_ETCD_backup_######
+# /etc/kubernetes/maifests/etcd.yaml
+export ETCDCTL_API=3
+etcdctl version
+etcdctl snapshot save -h and keep a note of the mandatory global options.
+Since our ETCD database is TLS-Enabled, the following options are mandatory:
+–-cacert                verify certificates of TLS-enabled secure servers using this CA bundle
+–-cert                    identify secure client using this TLS certificate file
+–-endpoints=[127.0.0.1:2379] This is the default as ETCD is running on master node and exposed on localhost 2379.
+–-key                  identify secure client using this TLS key file
+###_ETCD_restore_######
+export ETCDCTL_API=3
+etcdctl snapshot restore –-key=/etc/kubernetes/pki/etcd/server.key --cert=/etc/kubernetes/pki/etcd/server.crt --cacert=/etc/kubernetes/pki/etcd/ca.crt --data-dir=/var/lib/etcd
+#######################
+-[cmlLw]
+-c, --bytes            print the byte counts
+  -m, --chars            print the character counts
+  -l, --lines            print the newline counts
+      --files0-from=F    read input from the files specified by
+                           NUL-terminated names in file F;
+                           If F is - then read names from standard input
+  -L, --max-line-length  print the length of the longest line
+  -w, --words            print the word counts
+      --help     display this help and exit
+      --version  output version information and exit
+##### CSR
+kubectl get csr
+kubectl get csr/user -o yaml
+kubectl certificate approve username
+
+### role
+kubectl get role -A
